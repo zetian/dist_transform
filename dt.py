@@ -9,6 +9,7 @@ https://theoryofcomputing.org/articles/v008a019/v008a019.pdf
 """
 
 inf = 1e10
+
 def distance_transform_1D(f):
     n = f.size
     para_loc = np.zeros(n)
@@ -33,19 +34,14 @@ def distance_transform_1D(f):
         dist[q] = (q - para_loc[right_most_para])*(q - para_loc[right_most_para]) + f[int(para_loc[right_most_para])]
     return dist
 
-def distance_transform_2D(image):
-    row = image.shape[0]
-    col = image.shape[1]
-    for x in range(0, row):
-        image[x, :] = distance_transform_1D(image[x, :])
-    for y in range(0, col):
-        image[:, y] = distance_transform_1D(image[:, y])
-    return np.sqrt(image)
-
 def distance_transform(image):
     image[image == 0] = inf
     image[image == 1] = 0
-    return distance_transform_2D(image)
+    for x in range(0, image.shape[0]):
+        image[x, :] = distance_transform_1D(image[x, :])
+    for y in range(0, image.shape[1]):
+        image[:, y] = distance_transform_1D(image[:, y])
+    return np.sqrt(image)
 
 img = np.zeros((100, 100))
 img[30][30] = 1
